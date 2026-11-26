@@ -1,0 +1,65 @@
+<?svml using="@hypit/markup@1"?>
+<svml>
+  <import as="time" from="@hypit/timeline-author@1"/>
+  <import as="spatial" from="@hypit/spatial@1"/>
+  <import as="fonts" from="@hypit/fonts-open@1"/>
+  <import as="media" from="@hypit/media@1"/>
+  <import as="pipeline" from="@hypit/media-pipeline@1"/>
+  <import as="brand" from="@realtryon/brand-film@1"/>
+  <import as="audio" from="@hypit/audio-track@1"/>
+  <import as="film" from="@hypit/film@1"/>
+  <import as="render" from="@hypit/render-hyperframes@1"/>
+  <import as="look" source="./look.svs"/>
+
+  <time:Clock id="clock" frame-rate="30"/>
+  <time:Timeline id="animation" clock={clock} end="23s"/>
+  <spatial:Canvas id="canvas" width="1080" height="1920"/>
+  <fonts:Stack id="display" family="archivo-black" weight="400" style="normal"/>
+  <fonts:Stack id="sans" family="inter" weight="600" style="normal"/>
+
+  <media:Video id="mirror-file" src="../assets/live-mirror-stripes.mp4"/>
+  <media:Video id="glasses-file" src="../assets/live-mirror-sunglasses.mp4"/>
+  <media:Image id="fitting-ui" src="../assets/fitting-room.png"/>
+  <media:Image id="studio-ui" src="../assets/photo-studio.png"/>
+  <media:Audio id="bed-file" src="../assets/bed.wav"/>
+
+  <pipeline:Normalize id="mirror" source={mirror-file} video="primary-moving" audio="none" span-authority="video" clock={clock}/>
+  <pipeline:Normalize id="glasses" source={glasses-file} video="primary-moving" audio="none" span-authority="video" clock={clock}/>
+  <pipeline:Normalize id="bed" source={bed-file} video="none" audio="default" span-authority="audio" clock={clock}/>
+
+  <brand:Episode id="episode" timeline={animation.timeline} canvas={canvas}
+    display={display} sans={sans} during="program"
+    mirror={mirror.media} glasses={glasses.media} fitting={fitting-ui} studio={studio-ui}>
+    <brand:Beat id="hook" at="0s" hold="4.5" inset="mirror"
+      kicker="LIVE CAMERA" line="Try it on" emphasis="while you move."
+      body="Clothes and glasses, in your browser. No app."
+      pills="Live camera|No personal photo|Your space"/>
+    <brand:Beat id="fitting" at="4.5s" hold="4.5" inset="fitting"
+      kicker="IN THE BROWSER" line="Camera off" emphasis="until you start."
+      body="Pick a garment, agree to share the camera and the outfit, then start the live mirror."
+      pills="Start live mirror"/>
+    <brand:Beat id="glasses" at="9s" hold="4.5" inset="glasses"
+      kicker="CLOTHES AND GLASSES" line="The look" emphasis="moves with you."
+      body="A live preview as you turn. Switch outfits in the same session."
+      pills="No photo of you"/>
+    <brand:Beat id="studio" at="13.5s" hold="4.5" inset="studio"
+      kicker="PHOTO STUDIO" line="Then" emphasis="compare."
+      body="Saved live looks side by side, or a photo beside an existing result."
+      note="Sample people are reference images, not try-on results."
+      pills="Existing result"/>
+    <brand:Beat id="cta" at="18s" hold="5" inset="none"
+      kicker="REALTRYON" line="Open" emphasis="Live Mirror"
+      cta="30s Free" url="https://www.realtryon.com"
+      note="Visual previews cannot determine physical fit or size."/>
+  </brand:Episode>
+
+  <audio:Track id="music" timeline={animation.timeline}>
+    <audio:Item source={bed.media} during="program" playback="once" gain="8" fade-in="15f" fade-out="24f"/>
+  </audio:Track>
+
+  <film:Film id="main" canvas={canvas} timeline={animation.timeline} appearance={look.film.main}>
+    <film:Track source={episode.track}/>
+    <film:Track source={music.audio}/>
+  </film:Film>
+  <render:Video id="final" composition={main.composition} timeline={animation.timeline}/>
+</svml>
