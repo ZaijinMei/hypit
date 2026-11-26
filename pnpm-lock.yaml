@@ -3812,6 +3812,15 @@ importers:
         specifier: workspace:*
         version: link:../../services/yt-dlp
 
+  projects/realtryon-brand/packages/brand-film:
+    devDependencies:
+      '@hypit/hypit':
+        specifier: workspace:*
+        version: link:../../../..
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+
   services/image-opencv: {}
 
   services/whisperx: {}

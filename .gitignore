@@ -70,5 +70,10 @@ examples/**/.svml/
 /examples/*-reverse/
 /examples/reference-reconstruction/
 
-# Reverse-engineering scratch projects live outside the repository too
+# Reverse-engineering scratch projects live outside the repository too.
+# Commissioned productions under projects/ are the exception and stay in the repo.
 /projects/*
+!/projects/realtryon-brand/
+!/projects/realtryon-brand/**
+projects/realtryon-brand/**/.hypit/
+projects/realtryon-brand/**/node_modules/
